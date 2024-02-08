@@ -3,5 +3,5 @@ import numpy as np
 
 particle_type = input("Inserisci il tipo di particella: ")
 problema = input("Inserisci il tipo di problema: ")
-x_values = np.linspace(0, 1, 10) 
+x_values = np.linspace(0, 100, 100) 
 particella = single_particle(particle_type, x_values, problema)

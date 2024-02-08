@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import scipy.special
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from time_evolution import Time_evolution
 
 
 def V (x_values):
@@ -48,19 +49,23 @@ class wave_function:
         #elif particle_type == 'altra particella':
         #    ...
         if problema == 'buca di potenziale':
-            for n in range (1,10):
-                psi = []
-                for x in x_values:
-                    psi.append((np.abs(np.sqrt(2/len(x_values))*np.sin(n*x*np.pi/len(x_values))))**2)
-                #self.n = norm(psi,x_values)
-                plt.style.use("dark_background")
-                plt.plot(x_values,psi, linewidth=0.5, label="Wave function")
+            n = int(input("Definire il primo numero quantico: "))
+            psi = []
+            for x in x_values:
+                psi.append((np.abs(np.sqrt(2/len(x_values))*np.sin(n*x*np.pi/len(x_values))))**2)
+            #self.n = norm(psi,x_values)
+            plt.style.use("dark_background")
+            plt.plot(x_values,psi, linewidth=0.5, label="Wave function")
             plt.show()
           
         elif problema == 'atomo idrogeno':
-            n = 4
-            l = 3
-            m = 1
+            n = int(input("Definire il primo numero quantico: "))
+            l = int(input("Definire il secondo numero quantico: "))
+            m = int(input("Definire il terzo numero quantico: "))
+            if l > (n-1) :
+                l = input("Il secondo numero inserito non è ammesso, definire nuovamente il secondo numero quantico: ") 
+            if m < -l or m > l:
+                m = input("Il terzo numero inserito non è ammesso, definire nuovamente il terzo numero quantico: ")
             psi = []
             X_values = []
             y_values = []
@@ -94,6 +99,12 @@ class wave_function:
             H_kinetic = -hbar/2 * m_e * np.gradient(np.gradient(psi, x_values), x_values)
             H = H_kinetic + V(x_values)
             self.H = expectation_value(psi,H,x_values)
+            self.time_evolution = Time_evolution()
+            self.time_evolution.evolution(psi,V,x_values,frames=100, interval=50)
     
         elif problema == 'atomo idrogeno':
-           ...
+            H_kinetic = -hbar/2 * m_e * np.gradient(np.gradient(psi, x_values), x_values)
+            H = H_kinetic + V(x_values)
+            self.H = expectation_value(psi,H,x_values)
+            self.time_evolution = Time_evolution() 
+            self.time_evolution.evolution(psi,V,x_values,frames=100, interval=50)

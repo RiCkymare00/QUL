@@ -9,6 +9,7 @@ class single_particle:
         particle_spin = particle.s
         particle_charge = particle.c
         print(particle_mass,particle_spin,particle_charge)
+        particle_evolution = particle.time_evolution.evolution
         #expectation_energy = particle.H
         #print(expectation_energy)
 
