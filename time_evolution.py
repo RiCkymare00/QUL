@@ -7,14 +7,14 @@ from matplotlib.animation import FuncAnimation
 def potencial(x_values, delta_t,t):
     V = np.zeros_like(x_values)
     velocity = len(x_values) / delta_t
-    if t > 50 and t < 75 :
+    if t > 50:
         buca = len(x_values) - int(velocity*(t - 50))
-        V[x_values > buca] = - float ('inf')
-        #print(V)
-    if t > 75:
-        buca = len(x_values) - int(velocity*(t - 50))
-        V[x_values > buca] = 0
-        #print(V)
+        V[x_values > buca] = 3000000000000000
+        if t > 75 :
+            buca = len(x_values) - int(velocity*(t - 75))
+            V[x_values > buca] = 0
+    
+    print(V)
     return V 
 
 class Time_evolution:
@@ -29,6 +29,7 @@ class Time_evolution:
         def update(frame,x_values, K, frames, psi):
             t = t_values[frame]
             operatore = np.exp(-1j * (K + potencial(x_values,frames,t)) * t / hbar)
+            #print(potencial(x_values,frames,t))
             evolved_psi = psi * operatore
             Psi = np.abs(evolved_psi)**2
             norm_Psi = np.linalg.norm(Psi)
