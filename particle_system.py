@@ -51,11 +51,15 @@ class wave_function:
         if problema == 'buca di potenziale':
             n = int(input("Definire il primo numero quantico: "))
             psi = []
+            function = []
             for x in x_values:
+                function = np.sqrt(2/len(x_values))*np.sin(n*x*np.pi/len(x_values))
                 psi.append((np.abs(np.sqrt(2/len(x_values))*np.sin(n*x*np.pi/len(x_values))))**2)
+                norma_psi = np.linalg.norm(psi)
+                psi_normalizzato = psi / norma_psi
             #self.n = norm(psi,x_values)
             plt.style.use("dark_background")
-            plt.plot(x_values,psi, linewidth=0.5, label="Wave function")
+            plt.plot(x_values,psi_normalizzato, linewidth=0.5, label="Wave function")
             plt.show()
           
         elif problema == 'atomo idrogeno':
@@ -67,6 +71,7 @@ class wave_function:
             if m < -l or m > l:
                 m = input("Il terzo numero inserito non è ammesso, definire nuovamente il terzo numero quantico: ")
             psi = []
+            function = []
             X_values = []
             y_values = []
             z_values = []
@@ -77,6 +82,7 @@ class wave_function:
                     for phi in phi_values:
                         R = radial_wave_function(r, n, l)
                         Y = angular_wave_function(theta, phi, l, m)
+                        function = R * Y
                         psi.append(np.abs(R * Y)**2)
                         x = np.abs(R * Y)**2 * np.sin(theta) * np.cos(phi)
                         y = np.abs(R * Y)**2 * np.sin(theta) * np.sin(phi)
@@ -100,11 +106,11 @@ class wave_function:
             H = H_kinetic + V(x_values)
             self.H = expectation_value(psi,H,x_values)
             self.time_evolution = Time_evolution()
-            self.time_evolution.evolution(psi,V,x_values,frames=100, interval=50)
+            self.time_evolution.evolution(psi_normalizzato,H_kinetic,x_values,frames=100, interval=50)
     
         elif problema == 'atomo idrogeno':
             H_kinetic = -hbar/2 * m_e * np.gradient(np.gradient(psi, x_values), x_values)
             H = H_kinetic + V(x_values)
             self.H = expectation_value(psi,H,x_values)
             self.time_evolution = Time_evolution() 
-            self.time_evolution.evolution(psi,V,x_values,frames=100, interval=50)
+            self.time_evolution.evolution(function,H_kinetic,x_values,frames=100, interval=50)
