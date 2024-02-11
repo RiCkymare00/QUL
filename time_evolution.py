@@ -16,8 +16,8 @@ def potencial(x_values, delta_t,t):
     if t > 10:
         buca = len(x_values) - int(velocity*(t - 10))
         V[x_values > buca] = 0.1
-        if t > 15 :
-            buca = len(x_values) - int(velocity*(t - 15))
+        if t > 35 :
+            buca = len(x_values) - int(velocity*(t - 35))
             V[x_values > buca] = 0
     #print(V)
     return V 
@@ -50,17 +50,15 @@ class Time_evolution:
         
         def update(frame,x_values, K, frames, psi):
             t = t_values[frame]
-            operatore = []
-            operatore = np.exp(-1j * ((K + potencial(x_values, frames, t)) * t / hbar))
+            #operatore = []
+            #operatore = np.exp(-1j * ((K + potencial(x_values, frames, t)) * t / hbar))
+            #evolved_psi = psi * operatore
             if t > 10:
                 kinetic = K 
                 poten = potencial(x_values, frames, t)
-                for x in range(int(t)+1, int(t)+2):
-                    for y in range(2):
-                        psi = psi - solve_eigenproblem(kinetic,potencial(x_values, frames, t+x))*psi-solve_eigenproblem(kinetic,poten)*psi-solve_eigenproblem(kinetic,potencial(x_values, frames, t-y))*psi
-                
-            evolved_psi = psi * operatore
-            Psi = np.abs(evolved_psi)**2
+                psi = psi - solve_eigenproblem(kinetic,poten)*psi
+
+            Psi = np.abs(psi)**2
             Psi_array = np.array(Psi)  
             Psi_normalized = Psi_array/((np.sum(Psi_array**2))**0.5)
             line.set_data(x_values, Psi_normalized)
@@ -75,5 +73,5 @@ class Time_evolution:
         ax.set_ylim(-0.1,0.5)
 
         ani = FuncAnimation(fig, update, frames=frames, fargs=(x_values, K , frames, psi), blit=True, interval=interval)
-        #ani.save('evoluzione_temporale.mp4', writer='ffmpeg')
-        plt.show()
+        #plt.show()
+        ani.save('evoluzione_temporale.mp4', writer='ffmpeg')
